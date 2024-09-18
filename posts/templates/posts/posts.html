@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>posts</title>
+</head>
+<body>
+    {% include 'posts/navbar.html' %}
+    <h1>{{request.user.username}}</h1>
+    <img src="{{request.user.image.url}}" alt="">
+
+
+
+    <div>
+        {% for post in posts %}
+        <div>
+            <img src="{{post.user.image.url}}" alt="">
+            <h5>{{post.user.username}}</h5>
+            <p>{{post.created|timesince}} ago</p>
+            <p>{{post.text}}</p>
+            {% for image in post.images.all %}
+            <img src="{{image.image.url}}" alt="">
+            {% endfor %}
+            <p>{{post.like}} likes</p>
+            <a href="{% url 'like' post.id %}">
+                <button>like</button>
+            </a>
+            <a href="{% url 'post' post.id %}">
+                <button>comment</button>
+            </a>
+        </div><hr>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

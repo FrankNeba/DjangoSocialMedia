@@ -8,6 +8,20 @@
 <body>
     {% include 'posts/navbar.html' %}
     <h1>Add Post</h1>
-    form
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="text">Post</label>
+        <textarea name="text" id="text" ></textarea>
+
+        <label for="images">Add image</label>
+        <input type="file" accept="image/*" name="images" id="images" multiple style="display: none;">
+
+        <label for="video">Add video</label>
+        <input type="file" name="video" id="video" accept="video/*" style="display: none;">
+
+        <button type="submit">Post</button>
+
+    </form>
 </body>
 </html>

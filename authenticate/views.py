@@ -160,8 +160,7 @@ def updateProfile(request):
         user.username = request.POST['username']
         user.first_name = request.POST['firstname']
         user.last_name= request.POST['lastname']
-        if request.FILES.get('image') is not None:
-            user.image = request.FILES['image']
+        user.image = request.FILES.get('image',None)
         user.save()
         messages.success(request,'Profile Updated succesfully')
     return render(request, 'authenticate/updateProfile.html', {'user':user})

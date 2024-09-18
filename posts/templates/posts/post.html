@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>post</title>
+</head>
+<body>
+    {% include 'posts/navbar.html' %}
+    <img src="{{post.user.image.url}}" alt="">
+    <h5>{{post.user.username}}</h5> <hr>
+    <p>{{post.text}}</p>
+    {% for image in post.images.all %}
+    <img src="{{image.image.url}}" alt="">
+    {% endfor %}
+
+    <hr>
+    <p>{{likes.count}} likes</p>
+    <a href="{% url 'like' post.id %}">
+        <button>like</button>
+    </a>
+    <form action="" method="post">
+        {% csrf_token %}
+
+       <input type="text" name="comment" id="comment" placeholder="comment" required>
+       <button type="submit">send</button>
+
+    </form>
+    <h4>Comments</h4>
+    {% for comment in comments %}
+    <img src="{{comment.user.image.url}}" alt="">
+    <h5>{{comment.user.username}}</h5>
+    <p>{{comment.text}}</p>
+    <hr>
+    {% endfor %}
+
+</body>
+</html>
