@@ -4,6 +4,7 @@
 <a href="{% url 'logout' %}">Logout</a>
 <a href="{% url 'update_profile' %}">Update profile</a>
 <a href="{% url 'posts' %}">Posts</a>
+<a href="{% url 'profile' request.user.id %}">profile</a>
 {% else %}
 <a href="{% url 'login' %}">Login</a>
 {% endif %}

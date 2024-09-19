@@ -15,8 +15,11 @@
     <div>
         {% for post in posts %}
         <div>
-            <img src="{{post.user.image.url}}" alt="">
-            <h5>{{post.user.username}}</h5>
+            <a href="{% url 'profile' post.user.id %}">
+                <img src="{{post.user.image.url}}" alt="">
+                <h5>{{post.user.username}}</h5>
+            </a>
+            
             <p>{{post.created|timesince}} ago</p>
             <p>{{post.text}}</p>
             {% for image in post.images.all %}
@@ -28,6 +31,9 @@
             </a>
             <a href="{% url 'post' post.id %}">
                 <button>comment</button>
+            </a>
+            <a href="{% url 'unlike' post.id %}">
+                <button>unlike</button>
             </a>
         </div><hr>
         {% endfor %}

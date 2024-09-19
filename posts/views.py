@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Post, Like, Comment, Image
+from authenticate.models import Follower
 from django.contrib.auth.decorators import login_required
 
 
@@ -25,14 +26,20 @@ def addPost(request):
             name = f'{user.username} posted "{text[0:20]}" '
             postImage = Image(image = image, name = name)
             postImage.save()
-            post.image.add(postImage)
+            post.images.add(postImage)
         post.save()
         return redirect('home')
     return render(request, 'posts/addPost.html')
 
 login_required(login_url='home')
 def posts(request):
-    posts = Post.objects.all()
+    following = Follower.objects.filter(follower = request.user)
+    posts = Post.objects.filter(user = request.user)
+    for user in following:
+        userPosts = Post.objects.filter(user = user.user)
+        posts = list(posts) + list(userPosts) 
+    posts = list(posts)
+    posts.sort(key=lambda x: x.created, reverse=True)
     context = {'posts':posts}
     return render(request,'posts/posts.html', context)
 
@@ -57,5 +64,11 @@ def like(request, pk):
     return redirect(request.META.get('HTTP_REFERER'))
 
 def unlike(request,pk):
-    like = Like.objects.get(post__id = id)
+    
+    post = Post.objects.get(id = pk)
+    like = Like.objects.get(post__id = pk , user = request.user)
+    post.like -= 1
+    post.save()
+    like.delete()
+    return redirect(request.META.get('HTTP_REFERER'))
             

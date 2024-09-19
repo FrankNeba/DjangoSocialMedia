@@ -6,7 +6,10 @@ class Image(models.Model):
     # post = models.ForeignKey(Post, on_delete=models.CASCADE)
     name = models.CharField(null=True, max_length=200)
     image = models.ImageField(upload_to='media/images/posts', null=True)
+    created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created']
 
     def __str__(self):
         return f'{self.name}'
@@ -31,6 +34,10 @@ class Post(models.Model):
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
 
     def __str__(self):
         return f'{self.user.username} : {self.post.text[:20]}'
@@ -40,6 +47,10 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
 
     def __str__(self):
         return f'{self.user.username} : {self.text[:20]}'

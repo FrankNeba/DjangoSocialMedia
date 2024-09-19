@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Follower
+from posts.views import Post, Like
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -164,7 +165,33 @@ def updateProfile(request):
         user.save()
         messages.success(request,'Profile Updated succesfully')
     return render(request, 'authenticate/updateProfile.html', {'user':user})
+@login_required(login_url='login')
+def profile(request, pk):
+    user = User.objects.get(id = pk)
+    followers = Follower.objects.filter(user = user)
+    followings = Follower.objects.filter(follower = user)
+    posts = Post.objects.filter(user = user)
 
+    context = {'user':user,'posts':posts,'followers':followers, 'followings': followings}
+    return render(request, 'authenticate/profile.html', context)
+
+
+@login_required(login_url='login')
+def follow(request, pk):
+    follower = request.user
+    user = User.objects.get(id = pk)
+    follow = Follower(user = user, follower = follower)
+    follow.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url='login')
+def unfollow(request,pk):
+    follower = request.user
+    user = User.objects.get(id = pk)
+    follow = Follower.objects.get(user = user, follower = follower)
+    follow.delete()
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
         
