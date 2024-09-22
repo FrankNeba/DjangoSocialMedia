@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>post</title>
+</head>
+<body>
+    {% include 'posts/navbar.html' %}
+    <br>
+    <img src="{{post.user.image.url}}" alt="">
+    <h5>{{post.user.username}}</h5>
+    <p>{{post.created|timesince}} ago</p> <hr>
+    <p>{{post.text}}</p>
+    {% for image in post.images.all %}
+    <img src="{{image.image.url}}" alt="">
+    {% endfor %}
+
+    {% if post.video %}
+    <video controls width="320" height="240" controlslist="nodownload">
+        <source  src="{{post.video.url}}" type="video/mp4">
+    </video>
+    {% endif %}
+    <hr>
+    <p>{{likes.count}} likes</p>
+    {% if liked %}
+    <a href="{% url 'unlike' post.id %}">
+        <button>unlike</button>
+    </a>
+    {% else %}
+    <a href="{% url 'like' post.id %}">
+        <button>like</button>
+    </a>
+    {% endif %}
+    
+    {% if post.user == request.user %}
+    <a href="{% url 'delete_post' post.id %}">
+        <button>delete</button>
+    </a>
+    {% endif %}
+    <p>{{post.comment}} comments</p>
+    <form action="" method="post">
+        {% csrf_token %}
+
+       <input type="text" name="comment" id="comment" placeholder="comment" required>
+       <button type="submit">send</button>
+
+    </form>
+    <h4>Comments</h4>
+    {% for comment in comments %}
+    <img src="{{comment.user.image.url}}" alt="">
+    <h5>{{comment.user.username}}</h5>
+    <p>{{comment.text}}</p>
+    <small>
+        <a href="{% url 'comment' comment.id %}">reply</a>
+    </small>
+    {% if comment.user == request.user %}
+    <a href="{% url 'delete_comment' comment.id %}">
+        <button>delete</button>
+    </a>
+    {% endif %}
+    <p>{{comment.created|timesince}} ago</p>
+    <hr>
+    {% endfor %}
+
+</body>
+</html>
