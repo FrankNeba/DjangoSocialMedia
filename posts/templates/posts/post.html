@@ -33,7 +33,7 @@
     </a>
     {% endif %}
     
-    {% if post.user == request.user %}
+    {% if post.user == request.user or request.user.is_staff %}
     <a href="{% url 'delete_post' post.id %}">
         <button>delete</button>
     </a>
@@ -54,7 +54,7 @@
     <small>
         <a href="{% url 'comment' comment.id %}">reply</a>
     </small>
-    {% if comment.user == request.user %}
+    {% if comment.user == request.user or request.user.is_staff%}
     <a href="{% url 'delete_comment' comment.id %}">
         <button>delete</button>
     </a>

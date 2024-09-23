@@ -19,6 +19,8 @@ def mail(message, subject, recipient):
     )
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('posts')
     return render(request, 'authenticate/index.html')
 
 
@@ -49,12 +51,14 @@ def signup(request):
             user = User(username=username, email=email, password = make_password(password))
             user.code = code
             user.is_active = False
-            user.save()
-            login(request, user)
             message = f'Hello {username},\nYour Socia account verification code is {code}'
             subject = f'Account Verifcation'
-            mail(message=message, subject=subject, recipient=user.email)
-            return redirect('account_verification', pk=user.id)
+            try: 
+                mail(message=message, subject=subject, recipient=user.email)
+                user.save()
+                return redirect('account_verification', pk=user.id)
+            except:
+                messages.error(request, 'Check your internet connection')
         
     return render(request, 'authenticate/signup.html')
 
@@ -69,7 +73,9 @@ def accountActivation(request, pk):
             messages.success(request, 'Account verified, login to continue')
             return redirect('login')
         messages.error(request, 'Invalid code')
-    return render(request, 'authenticate/accountActivation.html')
+    page = 'Account Activation'
+    context = {'page':page}
+    return render(request, 'authenticate/accountActivation.html', context)
 
 
 @login_required(login_url='login')
@@ -102,7 +108,8 @@ def logUserIn(request):
                 return redirect('account_verification', pk=user.id)
         
         except:
-            messages.error(request,'incorrect email or password')
+            pass
+        messages.error(request,'Incorrect email or password')
     
     return render(request,'authenticate/login.html') 
 
@@ -113,11 +120,14 @@ def forgotPassword(request):
             user = User.objects.get(email = email)
             code = random.randint(111111, 999999)
             user.code = code
-            user.save()
             message = f'Hello {user.username},\nYour Socia account password reset code is {code}'
             subject = f'Reset password'
-            mail(message=message, subject=subject, recipient=user.email)
-            return redirect('password_reset_code', pk=user.id)
+            try: 
+                mail(message=message, subject=subject, recipient=user.email)
+                user.save()
+                return redirect('password_reset_code', pk=user.id)
+            except:
+                messages.error(request, 'Check your internet connection')
         except:
             messages.error(request,f'No user with email {email}')
     
@@ -130,7 +140,9 @@ def resetPasswordCode(request,pk):
         if user.code == code:
             return redirect('reset_password', pk=user.id)
         messages.error(request, 'Invalid code')
-    return render(request, 'authenticate/accountActivation.html')
+    page = 'Password Reset Code'
+    context = {'page':page}
+    return render(request, 'authenticate/accountActivation.html', context)
 
 def resetPassword(request, pk):
     if request.method == 'POST':

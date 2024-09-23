@@ -4,6 +4,10 @@ from .models import *
 from authenticate.models import Follower
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import error
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models import Q
+
 
 
 
@@ -11,7 +15,7 @@ from django.contrib.messages import error
 # Create your views here.
 
 def home(request):
-    return HttpResponse('ok')
+    pass
 
 @login_required(login_url='home')
 def addPost(request):
@@ -36,26 +40,83 @@ def addPost(request):
         return redirect('home')
     return render(request, 'posts/addPost.html')
 
+
 @login_required(login_url='home')
 def posts(request):
     following = Follower.objects.filter(follower = request.user)
     posts = Post.objects.filter(user = request.user)
+    user = request.user
+    if user.is_staff:
+        posts = Post.objects.all()
+    else:
+        for user in following:
+            userPosts = Post.objects.filter(user = user.user)
+            posts = list(posts) + list(userPosts) 
+        posts = list(posts)
+        posts.sort(key=lambda x: x.created, reverse=True)
     likes = []
     try:
         likes = Like.objects.filter(user = request.user)
     except:
         pass
     likedPosts = [like.post for like in likes]
-
-    for user in following:
-        userPosts = Post.objects.filter(user = user.user)
-        posts = list(posts) + list(userPosts) 
-    posts = list(posts)
-    posts.sort(key=lambda x: x.created, reverse=True)
-    context = {'posts':posts, 'likes': likedPosts}
+    page = 'home'
+    posts = posts[:100]
+    
+    context = {'posts':posts, 'likes': likedPosts, 'page':page}
     return render(request,'posts/posts.html', context)
 
-@login_required(login_url='home')
+@login_required(login_url='login')
+def trending(request):
+    now = timezone.now()
+    month = now - timedelta(days = 30)
+    posts = list(Post.objects.filter(created__gte = month))
+    posts.sort(key=lambda x: x.like + x.comment, reverse=True )
+    likes = []
+    try:
+        likes = Like.objects.filter(user = request.user)
+    except:
+        pass
+    likedPosts = [like.post for like in likes]
+    page = 'trending'
+    posts = posts[:100]
+
+    context = {'posts':posts, 'likes': likedPosts, 'page':page}
+    return render(request,'posts/posts.html', context)
+    
+@login_required(login_url='login')
+def search(request, q):
+    q = request.GET.get('q',q)
+    posts = []
+    if q is not None and q is not ' ':
+        posts = Post.objects.filter(text__contains = q) 
+    page = 'search'
+    if q is None:
+        q = ' '
+    context = {'q':q, 'posts':posts, 'page':page, 'section':'posts'}
+    return render(request, 'posts/search.html', context)
+
+
+@login_required(login_url='login')
+def searchPeople(request, q):
+    user = request.user
+    q = request.GET.get('q', q)
+    users = User.objects.filter(Q(username__contains = q) |
+                                Q(first_name__contains = q) |
+                                Q(last_name__contains = q))
+    followers = Follower.objects.filter(user = user)
+    followers = [follower.follower for follower in followers]
+    followings = Follower.objects.filter(follower = user)
+    followings = [following.user for following in followings]
+    page = 'search'
+    context = {'q':q, 'users':users, 'page':page, 'followings':followings, 'followers':followers}
+    return render(request, 'posts/search.html', context)
+
+
+
+
+
+@login_required(login_url='login')
 def post(request,pk):
     post = Post.objects.get(id=pk)
     comments = Comment.objects.filter(post__id = post.id)

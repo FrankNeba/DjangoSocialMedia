@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from adminpanel.models import *
+from authenticate.models import *
 from posts.models import *
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, logout, authenticate
@@ -13,7 +13,7 @@ def mail(message, subject, recipient):
         subject = subject,
         message= message,
         recipient_list= [recipient],
-        from_email='',
+        from_email='Socia',
         fail_silently=False
 
     )
@@ -54,7 +54,7 @@ def signup(request):
             message = f'Hello {username},\nYour Socia account verification code is {code}'
             subject = f'Account Verifcation'
             mail(message=message, subject=subject, recipient=user.email)
-            return redirect('account_verification', pk=user.id)
+            return redirect('admin_account_verification', pk=user.id)
         
     return render(request, 'adminpanel/signup.html')
 
@@ -68,7 +68,7 @@ def accountActivation(request, pk):
             user.is_staff = True
             user.save()
             messages.success(request, 'Account verified, login to continue')
-            return redirect('login')
+            return redirect('admin_login')
         messages.error(request, 'Invalid code')
     return render(request, 'adminpanel/accountActivation.html')
 

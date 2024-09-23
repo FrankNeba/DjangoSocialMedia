@@ -13,4 +13,7 @@ urlpatterns = [
     path('edit_post/<str:pk>', views.editPost, name='edit_post'),
     path('post/comment/<str:pk>', views.viewComment, name='comment'),
     path('delete_reply/<str:pk>', views.deleteReply, name='delete_reply'),
+    path('trending', views.trending, name='trending'),
+    path('search_posts/<str:q>', views.search, name='search_posts'),
+    path('search_people/<str:q>', views.searchPeople, name='search_people'),
 ]
