@@ -110,7 +110,7 @@
                       />
                     </a>
                     <div class="w-full bg-slate-50 shadow-md p-2">
-                        <a href="{% url 'profile' post.user.id %}">
+                        <a href="{% url 'profile' comment.user.id %}">
                           <h5 class="font-medium text-xl text-primary">
                             {{comment.user.username|capfirst}}
                           </h5>
@@ -140,9 +140,8 @@
           
         </div>
         
-        <i class="fa-regular fa-paper-plane"></i>
         <!-- npx tailwindcss -i ./src/input.css -o ./src/output.css --watch -->
-    <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
+        <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
         <form action="" method="post" class="w-[98%] bg-slate-50 p-3 rounded-lg flex items-start border-2 border-primary">
         {% csrf_token %}
 
@@ -151,9 +150,10 @@
         <i class="fa-regular fa-paper-plane text-primary"></i>
        </button>
 
-    </form>
+       </form>
     
-    </div>
+     </div>
+     </div>
     
     <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script>
 </body>
