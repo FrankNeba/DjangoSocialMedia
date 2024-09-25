@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Comment</h1>
+    <img src="{{comment.user.image.url}}" alt="">
+    <strong>{{comment.user.username}}</strong>
+    <p>{{comment.text}}</p>
+
+    <h4>Add reply</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label for="text">Reply</label>
+        <input type="text" name="text" id="text" placeholder="reply">
+        <button type="submit">send</button>
+    </form>
+
+    <h3>{{comment.replies}} Replies</h3>
+    {% for reply in replies %}
+    <img src="{{reply.user.image.url}}" alt="">
+    <h5>{{reply.user.username}}</h5>
+    <p>{{reply.text}}</p>
+    {% if reply.user == request.user %}
+    <a href="{% url 'delete_reply' reply.id %}">delete</a>
+    {% endif %}
+    <small>{{reply.created|timesince}}</small>
+    <hr>
+    {% endfor %}
+</body>
+</html>

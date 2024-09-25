@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{user.username}}</title>
+    {% include 'tailwind.html' %}
+  </head>
+  <body class="bg-slate-100 flex flex-col items-center">
+    <div class="w-full sm:w-2/3 p-10 flex flex-col">
+      <div class="flex flex-col md:flex-row text-center gap-4">
+        <img
+          src="{{user.image.url}}"
+          alt="{{user.username}}"
+          class="w-60 h-60 rounded-full"
+        />
+        <div class="flex flex-col relative w-full">
+          <div class="flex flex-row w-full">
+            {% if user.first_name %}
+            <p>{{user.first_name}} wow</p>
+            {% endif %} {% if user.last_name %}
+            <p>{{user.last_name}}</p>
+            {% endif %}
+          </div>
+
+          <p>{{ user.username|capfirst}}</p>
+
+          {% if request.user == user %}
+          <a href="">Edit profile</a>
+          {% else %}
+          <div class="flex justify-center gap-4 md:absolute w-full bottom-0">
+            {% if user in myfollowings %}
+            <a
+              href="{% url 'unfollow' user.id %}"
+              class="w-1/2 shadow-md p-3 bg-primary text-white rounded-lg flex justify-center items-center"
+              >Unfollow &nbsp
+              <i class="fa-regular fa-square-check"></i>
+            </a>
+            {% elif user in myfollowers %}
+            <a
+              href="{% url 'follow' user.id %}"
+              class="w-1/2 shadow-md p-3 text-primary bg-white rounded-lg flex justify-center items-center"
+              >Follow back &nbsp
+              <i class="fa-regular fa-square-plus"></i>
+            </a>
+            {% else %}
+            <a
+              href="{% url 'follow' user.id %}"
+              class="w-1/2 shadow-md p-3 text-primary bg-white rounded-lg flex justify-center items-center"
+              >follow &nbsp
+              <i class="fa-regular fa-square-plus"></i>
+            </a>
+          {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row gap-3">
+        <div class="md:w-1/2 w-full flex flex-col">
+          <h3>{{followers.count}} Followers</h3>
+          {% for follower in followers %}
+          <div class="flex flex-row justify-between items-center">
+            <a href="{% url 'profile' follower.follower.id %}" class="flex gap-3 w-full md:w-[80%] items-center">
+                <img
+                  src="{{follower.follower.image.url}}"
+                  alt="{{follower.follower.username}}"
+                  class="w-20 h-20 rounded-full"
+                />
+                <h4 class="text-xl font-medium">{{follower.follower.username|capfirst}}</h4>
+              </a>
+              {% if follower.follower in myfollowings %}
+              <a
+              href="{% url 'unfollow' follower.follower.id %}"
+              class="w-1/3 shadow-md p-1 bg-primary text-white rounded-lg flex justify-center items-center h-10"
+              >Unfollow &nbsp
+              <i class="fa-regular fa-square-check"></i>
+            </a>
+            {% elif follower.follower in myfollowers %}
+            <a
+              href="{% url 'follow' follower.follower.id %}"
+              class="w-1/3  shadow-md p-1 text-primary bg-white rounded-lg flex justify-center items-center h-10"
+              >follow back&nbsp
+              <i class="fa-regular fa-square-plus"></i>
+            </a>
+            {% else %}
+            <a
+              href="{% url 'follow' follower.follower.id %}"
+              class=" shadow-md w-1/3 text-primary bg-white rounded-lg flex justify-center items-center h-10"
+              >follow &nbsp
+              <i class="fa-regular fa-square-plus"></i>
+            </a>
+            {% endif %}
+          </div>
+          
+          {% endfor%}
+        </div>
+        <div class="md:w-1/2 w-full flex flex-col">
+                <h3>{{followings.count}} Following</h3>
+                {% for following in followings %}
+                <div class="flex flex-row justify-between items-center">
+                  <a href="{% url 'profile' following.user.id %}" class="flex gap-3 items-center">
+                      <img
+                        src="{{following.user.image.url}}"
+                        alt="{{following.user.username}}"
+                        class="w-20 h-20 rounded-full"
+                      />
+                      <h4 class="text-xl font-medium">{{following.user.username|capfirst}}</h4>
+                    </a>
+                    {% if following.user in myfollowings %}
+                    <a
+                    href="{% url 'unfollow' following.user.id %}"
+                    class="w-1/3 shadow-md p-1 bg-primary text-white rounded-lg flex justify-center items-center h-10"
+                    >Unfollow &nbsp
+                    <i class="fa-regular fa-square-check"></i>
+                  </a>
+                  {% elif following.user in myfollowers %}
+                  <a
+                    href="{% url 'follow' following.user.id %}"
+                    class="w-1/3 shadow-md p-1 text-primary bg-white rounded-lg flex justify-center items-center h-10"
+                    >follow back&nbsp
+                    <i class="fa-regular fa-square-plus"></i>
+                  </a>
+                  {% else %}
+                  <a
+                    href="{% url 'unfollow' following.user.id %}"
+                    class=" shadow-md w-1/3 text-primary bg-white rounded-lg flex justify-center items-center h-10"
+                    >follow &nbsp
+                    <i class="fa-regular fa-square-plus"></i>
+                  </a>
+                  {% endif %}
+                </div>
+                
+                {% endfor%}
+              </div>
+        </div>
+
+      <h3>Posts</h3>
+      {% for post in posts %}
+      <div>
+        <img src="{{post.user.image.url}}" alt="" />
+        <h5>{{post.user.username}}</h5>
+        <p>{{post.created|timesince}} ago</p>
+        <p>{{post.text}}</p>
+        {% for image in post.images.all %}
+        <img src="{{image.image.url}}" alt="" />
+        {% endfor %}
+        <p>{{post.like}} likes</p>
+        <a href="{% url 'like' post.id %}">
+          <button>like</button>
+        </a>
+        <a href="{% url 'post' post.id %}">
+          <button>comment</button>
+        </a>
+        <a href="{% url 'unlike' post.id %}">
+          <button>unlike</button>
+        </a>
+      </div>
+      <hr />
+      {% endfor %}
+    </div>
+
+    <script
+      src="https://kit.fontawesome.com/bef6373e3c.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
