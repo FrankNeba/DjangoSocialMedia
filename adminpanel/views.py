@@ -57,8 +57,9 @@ def signup(request):
             subject = f'Account Verifcation'
             mail(message=message, subject=subject, recipient=user.email)
             return redirect('admin_account_verification', pk=user.id)
-        
-    return render(request, 'adminpanel/signup.html')
+    auth = 'admin'
+    context = {'auth': auth}  
+    return render(request, 'authenticate/signup.html' , context)
 
 # @login_required(login_url='login')
 def accountActivation(request, pk):
@@ -86,6 +87,7 @@ def logUserIn(request):
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(request, email=email, password= password)
+        
 
         #if user exists and authentication is correct
         if user is not None :
@@ -96,7 +98,7 @@ def logUserIn(request):
             else:
                 messages.error(request, 'You are not allowed to access this site')
                 return redirect(request.META.get('HTTP_REFERER'))
-            return redirect('home')
+            return redirect('database')
 
                 
         try:
@@ -113,8 +115,10 @@ def logUserIn(request):
         
         except:
             messages.error(request,'incorrect email or password')
+    auth = 'admin'
+    context = {'auth': auth}
     
-    return render(request,'adminpanel/login.html') 
+    return render(request,'authenticate/login.html', context) 
 
 def forgotPassword(request):
     if request.method == 'POST':
@@ -184,7 +188,7 @@ def profile(request, pk):
     posts = Post.objects.filter(user = user)
 
     context = {'user':user,'posts':posts,'followers':followers, 'followings': followings}
-    return render(request, 'adminpanel/profile.html', context)
+    return render(request, 'authenticate/profile.html', context)
 
 
 @login_required(login_url='login')
@@ -233,7 +237,8 @@ def siteUsers(request):
 @login_required(login_url='login')
 def sitePosts(request):
     q = request.GET.get('q','')
-    posts = Post.objects.filter(text__contains = q)
+    posts = Post.objects.filter(Q(text__contains = q)|
+                                      Q(user__username__contains = q))
     page = 'admin'
     for post in posts:
         post.text = post.text[:20]
@@ -244,7 +249,7 @@ def sitePosts(request):
             post.delete()
         return redirect('adminposts')
     
-    context = {'posts':posts, 'page':page}
+    context = {'posts':posts, 'page':page,'q':q}
     return render(request, 'adminpanel/posts.html', context)
 
 
@@ -263,7 +268,7 @@ def siteComments(request):
             comment.delete()
         return redirect('adminposts')
     
-    context = {'comments':comments, 'page':page}
+    context = {'comments':comments, 'page':page, 'q':q}
     return render(request, 'adminpanel/comments.html', context)
 
 
@@ -282,7 +287,7 @@ def siteReplies(request):
             reply.delete()
         return redirect('adminposts')
     
-    context = {'replies':replies, 'page':page}
+    context = {'replies':replies, 'page':page,'q':q}
     return render(request, 'adminpanel/replies.html', context)
 
 

@@ -89,7 +89,11 @@
         {% endfor %}
         <p class="text-xl">
           Already have an account?
+          {% if auth == 'admin' %}
+          <a href="{% url 'admin_login' %}" class="text-primary">login Admin</a>
+          {% else %}
           <a href="{% url 'login' %}" class="text-primary">login</a>
+          {% endif %}
         </p>
       </form>
     </div>

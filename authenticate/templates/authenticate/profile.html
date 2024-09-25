@@ -7,20 +7,39 @@
     {% include 'tailwind.html' %}
   </head>
   <body class="bg-slate-100 flex flex-col items-center text-slate-700">
+    
     <div class="w-full md:w-2/3 p-3 flex flex-col">
+      <div class="w-full">
+        <a href="{% url 'home'  %}" class="text-2xl text-primary w-fit m-5">
+           <i class="fa-solid fa-circle-arrow-left"></i>
+       </a>
+     </div>
       <div class="flex flex-col md:flex-row text-center justify-center items-center gap-4">
-        <img
+        <div class="relative w-fit">
+          <img
           src="{{user.image.url}}"
           alt="{{user.username}}"
           class="w-60 h-60 rounded-full"
         />
+        {% if request.user == user %}
+          <form action="" method="post" enctype="multipart/form-data" class="absolute bottom-[10%] right-[5%]" id="form">
+            {% csrf_token %}
+            <label for="picture" class="text-3xl text-primary bg-white w-fit rounded-full p-2">
+              <i class="fa-solid fa-pencil"></i>
+            </label>
+            <input type="file" accept="image/*" id="picture" name="image" class="hidden">
+          </form>
+          
+        {% endif %}
+        </div>
+        
         <div class="flex flex-col relative w-full items-center pb-16">
-          <div class="flex flex-row w-full">
+          <div class="flex flex-row w-full space-x-3 justify-center items-center flex-wrap">
             {% if user.first_name %}
-            <p>{{user.first_name}} wow</p>
+            <p class="text-3xl font-bold">{{user.first_name}}</p>
             {% endif %}
             {% if user.last_name %}
-            <p>{{user.last_name}}</p>
+            <p class="text-3xl font-bold">{{user.last_name}}</p>
             {% endif %}
           </div>
 
@@ -28,7 +47,7 @@
 
           {% if request.user == user %}
           <a
-            href=""
+            href="{% url 'update_profile'%}"
             class="w-fit shadow-md p-3 bg-primary text-white rounded-lg flex justify-center items-center absolute bottom-0"
             >Edit profile</a
           >
@@ -62,7 +81,7 @@
       </div>
       <div class="flex flex-col md:flex-row gap-3">
         <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll">
-          <h3>{{followers.count}} Followers</h3>
+          <h3 class="font-medium">{{followers.count}} Followers</h3>
           {% for follower in followers %}
           <div class="flex flex-row justify-between items-center">
             <a
@@ -105,7 +124,7 @@
           {% endfor%}
         </div>
         <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll">
-          <h3>{{followings.count}} Following</h3>
+          <h3 class="font-medium">{{followings.count}} Following</h3>
           {% for following in followings %}
           <div class="flex flex-row justify-between items-center">
             <a
@@ -224,10 +243,17 @@
       </div>
       {% endfor %}
     </div>
-
     <script
       src="https://kit.fontawesome.com/bef6373e3c.js"
       crossorigin="anonymous"
     ></script>
+    <script>
+      const picture = document.getElementById('picture')
+      picture.addEventListener('change', () =>{
+        document.getElementById('form').submit()
+      })
+    </script>
+
+    
   </body>
 </html>

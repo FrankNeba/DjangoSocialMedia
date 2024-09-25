@@ -181,6 +181,11 @@ def updateProfile(request):
 @login_required(login_url='login')
 def profile(request, pk):
     user = User.objects.get(id = pk)
+    if request.method == 'POST':
+        image = request.FILES['image']
+        user.image = image
+        user.save()
+
     followers = Follower.objects.filter(user = user)
     followings = Follower.objects.filter(follower = user)
     posts = Post.objects.filter(user = user)

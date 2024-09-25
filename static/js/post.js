@@ -6,10 +6,12 @@ show.addEventListener('click', () => {
     console.log('clicked')
     menu.classList.toggle('hidden')
     menu.classList.toggle('flex')
+    hide.classList.toggle('hidden')
 })
 hide.addEventListener('click', () => {
     menu.classList.toggle('hidden')
     menu.classList.toggle('flex')
+    hide.classList.toggle('hidden')
 })
 
 const text = document.getElementById('post-text')

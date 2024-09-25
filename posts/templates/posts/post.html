@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>post</title>{% include 'tailwind.html' %}
+    <title>post</title>
+    {% include 'tailwind.html' %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-
   </head>
   <body class="bg-slate-100 flex flex-col text-slate-700  ">
     {% include 'navbar.html' %}
@@ -37,11 +36,14 @@
                 </div>
                 
             <div class="flex flex-col relative">
-                
-                <div class=" flex-col bg-slate-50 p-3 space-y-4 absolute right-0 top-0 hidden" id="menu">
-                    <button id="hide">
-                        <i class="fa-solid fa-xmark " ></i>
-                    </button>
+              <button id="hide" class="hidden">
+                <i class="fa-solid fa-xmark " ></i>
+            </button>
+            <button id="show">
+              <i class="fa-solid fa-ellipsis" ></i>
+          </button>
+                <div class=" flex-col bg-slate-50 p-3 space-y-4 absolute right-0 top-5 hidden" id="menu">
+                    
                     
                     {% if  request.user.is_staff %}
                     <a href="{% url 'delete_post' post.id %}" class="text-red-500" id="menu-delete">Delete</a>
@@ -50,9 +52,7 @@
                     <a href="{% url 'edit_post' post.id %}" class="text-primary" id="menu-edit">Edit</a>
                     {% endif %}
                 </div>
-                <button id="show">
-                    <i class="fa-solid fa-ellipsis" ></i>
-                </button>
+                
                 
                 
             </div>

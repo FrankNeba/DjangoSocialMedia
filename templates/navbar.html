@@ -34,15 +34,8 @@
             
             <span class="hidden md:block font-bold">Message</span>
         </a>
-
-        <a href="{% url 'logout' %}" class="link"  data-url-name="menu">
-            <span class="md:hidden">
-                <i class="fa-solid fa-bars md:hidden"></i>
-            </span>
-            
-            <span class="hidden md:block font-bold">Menu</span>
-        </a>
-
+        
+        
         {% if request.user.is_staff %}
         <a href="{% url 'database' %}" class="link" data-url-name="admin">
             <span class="md:hidden">
@@ -52,6 +45,16 @@
             <span class="hidden md:block font-bold">Admin</span>
         </a>
         {% endif %}
+
+        <a href="{% url 'logout' %}" class="link"  data-url-name="menu">
+            <span class="md:hidden">
+                <i class="fa-solid fa-right-from-bracket md:hidden"></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Logout</span>
+        </a>
+
+        
             
 </nav>
 {% load static %}

@@ -38,7 +38,13 @@
             {% for message in messages %}
             <p class="text-red-500 text-xl">{{message}}</p>
             {% endfor %}
-            <p class="text-xl">Don't have an account? <a href="{% url 'signup' %}" class="text-primary">Signup</a></p>
+            <p class="text-xl">Don't have an account?
+              {% if auth == 'admin' %}
+               <a href="{% url 'admin_signup' %}" class="text-primary">Signup Admin</a>
+               {% else %}
+               <a href="{% url 'signup' %}" class="text-primary">Signup</a>
+               {% endif %}
+            </p>
             
         </form>
         
