@@ -19,6 +19,14 @@
             <span class="hidden md:block font-bold">Trending</span>
         </a>
 
+        <a href="{% url 'database' %}" class="link" data-url-name="message">
+            <span class="md:hidden">
+                <i class="fa-solid fa-message "></i>
+            </span>
+            
+            <span class="hidden md:block font-bold">Message</span>
+        </a>
+
         <a href="{% url 'search_posts' ' ' %}" class="link" data-url-name="search">
             <span class="md:hidden">
                 <i class="fa-solid fa-magnifying-glass right-0 md:hidden"></i>
@@ -27,13 +35,7 @@
             <span class="hidden md:block font-bold">Search</span>
         </a>
 
-        <a href="{% url 'database' %}" class="link" data-url-name="message">
-            <span class="md:hidden">
-                <i class="fa-solid fa-message "></i>
-            </span>
-            
-            <span class="hidden md:block font-bold">Message</span>
-        </a>
+        
         
         
         {% if request.user.is_staff %}

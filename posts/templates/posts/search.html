@@ -18,7 +18,7 @@
           type="text"
           name="q"
           id="q"
-          value="{{q}}"
+          value="{{q|cut:' '}}"
           placeholder="Search"
           class="p-3 rounded-l-lg outline-none text-xl"
           required
@@ -35,8 +35,8 @@
         <a href="{% url 'search_people' q %}" class="w-full shadow-md p-3 text-primary bg-slate-50">People</a>
       </div>
 
-      {% if q != '' %}
-      <h3 class="text-2xl">Results for "{{q}}" in posts</h3>
+      {% if q != ' ' %}
+      <h3 class="text-2xl">Results for "{{q|cut:' '}}" in posts</h3>
       {% endif %} 
       {% for post in posts %}
       <div class="shadow-md p-5 bg-white">
@@ -123,7 +123,9 @@
         <a href="{% url 'search_people' q %}" class="w-full shadow-md p-3 bg-primary text-white">People</a>
       </div>
 
-
+      {% if q != ' ' %}
+      <h3 class="text-2xl">Results for "{{q|cut:' '}}" in users</h3>
+      {% endif %} 
       <div class="flex flex-col w-full sm:grid md:grid-cols-3 sm:grid-cols-2 gap-4 ">
         {% for user in users %}
         <div class="rounded-lg text-slate-700 w-full my-3 flex flex-col gap-3 text-xl ">

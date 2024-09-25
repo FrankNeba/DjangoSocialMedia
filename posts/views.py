@@ -198,7 +198,7 @@ def editPost(request,pk):
         post.save()
         return redirect('home')
     
-    context = {'post':post}
+    context = {'post':post, 'page':'edit'}
     return render(request, 'posts/addPost.html', context)
 
 @login_required(login_url='login')

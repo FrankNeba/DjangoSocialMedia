@@ -79,11 +79,11 @@
           {% endif %}
         </div>
       </div>
-      <div class="flex flex-col md:flex-row gap-3">
-        <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll">
-          <h3 class="font-medium">{{followers.count}} Followers</h3>
+      <div class="flex flex-col md:flex-row gap-3 ">
+        <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll border bg-white">
+          <h3 class="font-medium w-full p-3 bg-white mb-3 shadow-md">{{followers.count}} Followers</h3>
           {% for follower in followers %}
-          <div class="flex flex-row justify-between items-center">
+          <div class="flex flex-row justify-between items-center p-2">
             <a
               href="{% url 'profile' follower.follower.id %}"
               class="flex gap-3 items-center"
@@ -123,10 +123,10 @@
 
           {% endfor%}
         </div>
-        <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll">
-          <h3 class="font-medium">{{followings.count}} Following</h3>
+        <div class="md:w-1/2 w-full flex flex-col max-h-80 overflow-scroll border bg-white">
+          <h3 class="font-medium w-full p-3 bg-white mb-3 shadow-md">{{followings.count}} Following</h3>
           {% for following in followings %}
-          <div class="flex flex-row justify-between items-center">
+          <div class="flex flex-row justify-between items-center p-2">
             <a
               href="{% url 'profile' following.user.id %}"
               class="flex gap-3 items-center"
