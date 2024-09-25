@@ -22,17 +22,17 @@ def addPost(request):
     if request.method == 'POST':
         user = request.user
         text = request.POST.get('text',None)
-        video = None
         video = request.FILES.get('video', None)
         images = request.FILES.getlist('images', None)
         post = Post(user = user, text = text, video = video )
         post.save()
+        
         for image in images:
             name = f'{user.username} posted "{text[0:20]}" '
             postImage = Image(image = image, name = name)
             postImage.save()
             post.images.add(postImage)
-        if text is None and video is None:
+        if post.text == None and post.video == None and post.images == None:
             post.delete()
             error(request,'cannot post an empty post' )
             return redirect('add_post')
@@ -195,7 +195,10 @@ def editPost(request,pk):
             postImage = Image(image = image, name = name)
             postImage.save()
             post.images.add(postImage)
-        post.save()
+        if post.text != None or post.video != None:
+            post.save()
+        else:
+            error(request, 'Cannot post empty post')
         return redirect('home')
     
     context = {'post':post, 'page':'edit'}

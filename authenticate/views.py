@@ -133,17 +133,20 @@ def forgotPassword(request):
     
     return render(request, 'authenticate/forgotPassword.html')
 
+
 def resetPasswordCode(request,pk):
     if request.method == 'POST':
         code = int(request.POST['code'])
         user = User.objects.get(id = pk)
         if user.code == code:
+            login(request,user)
             return redirect('reset_password', pk=user.id)
         messages.error(request, 'Invalid code')
     page = 'Password Reset Code'
     context = {'page':page}
     return render(request, 'authenticate/accountActivation.html', context)
 
+@login_required(login_url='login')
 def resetPassword(request, pk):
     if request.method == 'POST':
         password = request.POST['password']
@@ -163,7 +166,7 @@ def resetPassword(request, pk):
             user = User.objects.get(id = pk)
             user.password = make_password(password)
             user.save()
-            return redirect('login')
+            return redirect('home')
     return render(request, 'authenticate/resetPassword.html') 
 
 @login_required(login_url='login')
