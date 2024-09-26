@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'authenticate',
     'posts',
     'adminpanel',
+    'message',
 ]
 
 MIDDLEWARE = [

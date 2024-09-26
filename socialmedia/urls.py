@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('authenticate.urls')),
     path('post/', include('posts.urls')),
     path('adminpanel/', include('adminpanel.urls')),
+    path('chats/', include('message.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
