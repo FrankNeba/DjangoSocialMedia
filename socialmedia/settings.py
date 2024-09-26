@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'posts',
     'adminpanel',
     'message',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +74,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'socialmedia.wsgi.application'
+ASGI_APPLICATION = 'socialmedia.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'},
+}
 
 
 

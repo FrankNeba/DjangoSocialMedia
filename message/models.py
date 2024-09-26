@@ -14,5 +14,10 @@ class Message(models.Model):
     class Meta:
         ordering = ['created']
 
+    @staticmethod
+    def getRoomName(user1, user2):
+        return f'{min(user1.id, user2.id)}_{max(user1.id,user2.id)}'
+        
+
     def __str__(self):
         return f'{self.sender.username} to {self.receiver.username}: {self.text[:20]}'

@@ -23,6 +23,7 @@ def chats(request):
             except:
                 chats[message.receiver]=message
     # chats = dict(sorted(list(chats.items())), key = lambda x : x[1].created)
+
     context = { 'chats':chats,'page':page}
     return render(request, 'message/chats.html', context)
 
@@ -39,5 +40,7 @@ def chat(request, pk):
             message.read = True
             message.save()
     
-    context = {'messages':messages,'user':user}
+    room_name = Message.getRoomName(user, request.user)
+    
+    context = {'messages':messages,'user':user, 'room_name':room_name}
     return render(request, 'message/chat.html', context)
