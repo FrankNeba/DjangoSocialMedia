@@ -7,17 +7,40 @@
     {% include 'tailwind.html' %}
 </head>
 <body class="bg-slate-100 flex flex-col  ">
-    <div class="w-full md:w-2/3 p-3 flex flex-col self-center">
-        <div class="w-full">
-          <a href="{% url 'chats'  %}" class="text-2xl text-primary w-fit m-5">
-             <i class="fa-solid fa-circle-arrow-left"></i>
-         </a>
-       </div>
+    <div class="w-full flex items-center bg-slate-300 fixed top-0 left-0">
+        <a href="{% url 'chats'  %}" class="text-2xl text-primary w-fit m-5">
+           <i class="fa-solid fa-circle-arrow-left"></i>
+       </a>
+       <img src="{{user.image.url}}" alt="" class="w-14 h-14 rounded-full">
+       <h1 class="text-2xl font-semibold">{{user.username|capfirst}}</h1>
+     </div>
+    <div class="w-full md:w-2/3 p-10 flex flex-col self-center mt-20 space-y-3 pb-40">
+        {% for message in messages %}
+            {% if message.sender != request.user %}
+                <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-yellow-400 rounded-r-3xl rounded-tl-3xl ">
+                    <p class="">{{message.text}} </p>
+                    <small>{{message.created|time}}</small>
+
+                </div>
+
+            {% else %}
+                <div class="w-full flex justify-end">
+                    <div class="max-w-[70%] w-fit flex-wrap border p-3 bg-primary rounded-l-3xl rounded-tr-3xl  ">
+                    <p class="">{{message.text}} </p>
+                    <small>{{message.created|time}}</small>
+                </div>
+            
+                </div>
+                
+            {% endif %}
+
+        {% endfor %}
+        
        <div class="w-full fixed flex bottom-0 left-0 justify-center p-2">
-        <form action="" method="post" class="w-[98%] h-5 bg-slate-50 p-3 rounded-full flex items-start border-2 border-primary">
+        <form action="" method="post" class="w-full  bg-slate-50 p-1 pl-4 rounded-3xl flex items-start border-2 border-primary justify-between px-3">
         {% csrf_token %}
 
-       <textarea name="comment" id="text" class="w-[95%] px-20  bg-slate-50 outline-none rounded-full" rows="1"></textarea>
+       <textarea name="text" id="text" class="w-[95%]  bg-slate-50 outline-none max-h-40 rounded-lg " rows="2"></textarea>
        <button type="submit">
         <i class="fa-regular fa-paper-plane text-primary"></i>
        </button>
@@ -28,5 +51,10 @@
     </div>
 
     <script src="https://kit.fontawesome.com/bef6373e3c.js" crossorigin="anonymous"></script>
+    <script>
+        window.onload = () =>{
+            window.scrollTo(0,document.body.scrollHeight)
+        }
+    </script>
 </body>
 </html>

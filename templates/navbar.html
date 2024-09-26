@@ -1,6 +1,6 @@
 
 
-<nav class="w-full fixed shadow-md top-0 left-0 p-3 bg-slate-100 z-50 flex justify-between items-center md:px-10 text-2xl">
+<nav class="w-full fixed shadow-md top-0 left-0 p-3 bg-slate-300 z-50 flex justify-between items-center md:px-10 text-2xl">
     <a href="{% url 'profile' request.user.id %}">
         <img src="{{request.user.image.url}}" alt="{{request.user.username}}" class="w-10 h-10 rounded-full ">
     </a> <a href="{% url 'posts' %}" class="link" data-url-name="home">

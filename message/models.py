@@ -12,7 +12,7 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['created']
 
     def __str__(self):
         return f'{self.sender.username} to {self.receiver.username}: {self.text[:20]}'
