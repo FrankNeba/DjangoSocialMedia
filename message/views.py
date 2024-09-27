@@ -33,7 +33,7 @@ def chat(request, pk):
         text = request.POST.get('text')
         message = Message(text = text, sender = request.user, receiver = user)
         message.save()
-    messages = Message.objects.filter(Q(sender = user, receiver = request.user) | Q(receiver = user, sender = request.user))
+    messages = list(Message.objects.filter(Q(sender = user, receiver = request.user) | Q(receiver = user, sender = request.user)))
     
     for message in messages:
         if message.sender != request.user:
@@ -41,6 +41,8 @@ def chat(request, pk):
             message.save()
     
     room_name = Message.getRoomName(user, request.user)
+    id = messages[-1].id
+    # id = 0
     
-    context = {'messages':messages,'user':user, 'room_name':room_name}
+    context = {'messages':messages,'user':user, 'room_name':room_name,'id':id}
     return render(request, 'message/chat.html', context)
